@@ -319,7 +319,7 @@ function accountPanel() {
   if(!cloud)panel.append(el('p',{},'This portable copy saves on this device. Open the hosted app address for automatic syncing between your phone and laptop.'));
     else if(!account)panel.append(el('p',{},'Connect this device to your private GitHub inventory. Use the same connection on your iPhone and laptop to share items, locations and quantities.'),button('Connect GitHub sync',()=>openAuth(),'primary'));
   else {
-    panel.append(el('p',{class:'account-email'},account.name||'Private inventory connected'),el('strong',{role:'status'},syncLabel()),syncDetail?el('p',{class:'small muted detail-notes'},syncDetail):null,
+    panel.append(el('p',{class:'account-email'},account.name||'Private inventory connected'),el('strong',{role:'status'},syncLabel()),...(syncDetail?[el('p',{class:'small muted detail-notes'},syncDetail)]:[]),
       el('div',{class:'row wrap',style:'margin-top:16px'},button(syncStatus==='syncing'?'Syncing…':'Sync now',()=>runSync(),'primary'),syncConflict?button('Review changes',openSyncReview,'warning'):null,button('Reconnect',()=>openAuth(),'quiet'),button('Disconnect',signOut,'quiet')));
     if(!state.items.length&&!state.locations.length)panel.append(button('Copy this device’s local inventory into my account',importDeviceInventory,'block compact quiet'));
     const recovery=el('details',{class:'recovery-tools'},el('summary',{},'Recover a copy from the last sync review'),el('p',{class:'small muted'},'The two copies from your last conflict decision are kept on this device. Download one, then restore it if needed.'),button('Download device copy',()=>downloadRecovery('local'),'compact quiet'),button('Download cloud copy',()=>downloadRecovery('remote'),'compact quiet'));panel.append(recovery);
