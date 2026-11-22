@@ -1,6 +1,8 @@
-const CACHE='parts-pocket-shell-91cba78c7b49';
+const CACHE='parts-pocket-shell-c14136bae08c';
 const ASSETS=['./','./index.html','./styles.css','./core.js','./store.js','./merge.js','./sync.js','./cloud.js','./cloud-config.js','./app.js','./manifest.webmanifest','./icon.svg','./icon-180.png','./icon-192.png','./icon-512.png'];
-self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS))));
+// Static hosts may keep old files in the HTTP cache for several minutes.
+// Every new offline shell must download the current release before activation.
+self.addEventListener('install',event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS.map(asset=>new Request(asset,{cache:'reload'}))))));
 self.addEventListener('activate',event=>event.waitUntil((async()=>{for(const key of await caches.keys())if(key.startsWith('parts-pocket-shell-')&&key!==CACHE)await caches.delete(key);await self.clients.claim();})()));
 self.addEventListener('fetch',event=>{
   if(event.request.method!=='GET')return;
