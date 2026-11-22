@@ -42,6 +42,22 @@ function requestPersistence() {navigator.storage?.persist?.().catch(()=>{});}
 function accountContext(){return {db,generation:accountGeneration};}
 function checkContext(context){if(context.db!==db||context.generation!==accountGeneration||switchingAccount)throw new Error('The account changed. Please try again in the current account.');}
 function brand() {return el('div',{class:'brand'},el('div',{class:'brand-mark'},icon('box')),el('span',{},'Parts Pocket'));}
+function themeButton() {
+  const dark=document.documentElement.dataset.theme==='dark';
+  const control=button(dark?'Light mode':'Dark mode',toggleTheme,'compact theme-toggle');
+  control.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');
+  const symbol=el('span',{'aria-hidden':'true',class:'theme-symbol'},dark?'☀':'☾');control.prepend(symbol);
+  return control;
+}
+function toggleTheme() {
+  const theme=document.documentElement.dataset.theme==='dark'?'light':'dark';
+  document.documentElement.dataset.theme=theme;
+  document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='dark'?'#111b26':'#f4f7f9');
+  try{localStorage.setItem('parts-pocket-theme',theme);}catch{}
+  for(const control of document.querySelectorAll('.theme-toggle')) {
+    const replacement=themeButton();control.replaceChildren(...replacement.childNodes);control.setAttribute('aria-label',replacement.getAttribute('aria-label'));
+  }
+}
 function navigate(tab) {ui.tab=tab;ui.selected.clear();ui.selecting=false;render();window.scrollTo(0,0);}
 function chooseLocation(id) {ui.location=id;ui.query='';ui.tab='items';ui.selected.clear();ui.selecting=false;render();window.scrollTo(0,0);}
 function navButton(label,tab,glyph,cls='nav-button') {return el('button',{class:cls+(ui.tab===tab?' active':''),type:'button',onclick:()=>label==='All items'?chooseLocation(null):navigate(tab),'aria-current':ui.tab===tab?'page':null},icon(glyph),el('span',{},label));}
@@ -69,7 +85,7 @@ function render() {
     el('div',{class:'side-foot'},button(syncLabel(),()=>navigate('backup'),'quiet compact','shield'),el('div',{style:'margin-top:6px'},offlineReady?'Ready to use offline':'Keep a backup of your inventory.')));
   const main=el('main',{class:'main'},el('div',{class:'mobile-brand'},brand(),el('span',{class:'pill'},'Personal inventory')));
   if(globalError)main.append(el('div',{class:'notice error inline-error',role:'alert'},globalError));
-  main.append(el('div',{class:'sync-strip'},button(syncLabel(),()=>navigate('backup'),'compact quiet','shield')));
+  main.append(el('div',{class:'sync-strip'},button(syncLabel(),()=>navigate('backup'),'compact quiet','shield'),themeButton()));
   if(ui.tab==='items')renderItems(main);else if(ui.tab==='locations')renderLocations(main);else renderBackup(main);
   const nav=el('nav',{class:'bottom-nav','aria-label':'Main'},navButton('Items','items','box',''),navButton('Locations','locations','folder',''),navButton('Sync & backup','backup','backup',''));
   app.replaceChildren(sidebar,main,nav);

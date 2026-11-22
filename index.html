@@ -3,7 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#183245">
+  <meta name="theme-color" content="#f4f7f9">
+  <meta name="color-scheme" content="light dark">
+  <script id="theme-init">
+    (() => {
+      let saved;
+      try { saved = localStorage.getItem('parts-pocket-theme'); } catch {}
+      const theme = saved === 'light' || saved === 'dark' ? saved :
+        (window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.dataset.theme = theme;
+      document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#111b26' : '#f4f7f9';
+    })();
+  </script>
   <meta name="description" content="Find your parts. Remember their place. Items, quantities and nested locations, with optional private sync.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">

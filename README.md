@@ -2,6 +2,8 @@
 
 A small personal inventory app for iPhone and laptop. Track nested locations, item names, search tags, placement notes and quantities. Search ignores capitals and matches any word, including valve/rocker cover aliases. Transfer one or several items to an existing or new location. Reducing a quantity to zero asks before deleting.
 
+Use the Light mode / Dark mode button at the top of any screen to switch appearance. The app follows your device's appearance on the first visit, then remembers your chosen mode in that browser. This preference is separate on each device and does not alter or sync inventory.
+
 Open https://kolce-coder.github.io/parts-pocket/ . On iPhone, open in Safari and use Share > Add to Home Screen. On a laptop, use the same address in your browser (or install it from your browser's app menu). Open the installed app before connecting your inventory.
 
 ## Private sync using GitHub
